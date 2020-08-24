@@ -10,8 +10,8 @@ import UIKit
 
 class MealsCell: UITableViewCell {
     
-    static let reuseID = "MealCell"
-    let mealLabel = MPTitleLabel(textAlignment: .natural, fontSize: 20)
+    static let reuseID  = "MealCell"
+    let mealLabel       = MPTitleLabel(textAlignment: .natural, fontSize: 20)
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
