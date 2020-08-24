@@ -119,7 +119,7 @@ extension MealsListVC: UITableViewDataSource, UITableViewDelegate {
                 guard let error = error else {
 
                     self.meals.remove(at: indexPath.row)
-                    self.tableView.deleteRows(at: [indexPath], with: .none)
+                    self.tableView.deleteRows(at: [indexPath], with: .automatic)
                     if self.meals.isEmpty {
                         self.showEmptyStateView(with: "You have no meals saved!\nAdd one by tapping the + button", in: self.view)
                     }
