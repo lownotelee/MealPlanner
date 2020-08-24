@@ -34,7 +34,7 @@ enum PersistenceManager {
                             mealsList.append(meal)
                         
                         case .remove:
-                            mealsList.removeAll(where: {$0.hashValue == meal.hashValue})
+                            mealsList.removeAll(where: {$0.title == meal.title})
                 }
                     completed(save(mealsList: mealsList))
                 

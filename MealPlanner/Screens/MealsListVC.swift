@@ -70,6 +70,7 @@ class MealsListVC: MPDataLoadingVC, AddButtonTappedDelegate {
             self.meals = meals
             DispatchQueue.main.async {
                 self.tableView.reloadData()
+                // bring table view to front in case the empty state view was there before
                 self.view.bringSubviewToFront(self.tableView)
             }
         }
@@ -95,7 +96,7 @@ extension MealsListVC: UITableViewDataSource, UITableViewDelegate {
         let delete = deleteAction(at: indexPath)
         return UISwipeActionsConfiguration(actions: [delete])
     }
-    
+
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let edit = editAction(at: indexPath)
         return UISwipeActionsConfiguration(actions: [edit])
@@ -112,16 +113,16 @@ extension MealsListVC: UITableViewDataSource, UITableViewDelegate {
     }
     
     func deleteAction(at indexPath: IndexPath) -> UIContextualAction {
-        //let meal = meals[indexPath.row]
         let action = UIContextualAction(style: .destructive, title: "Delete") { (action, view, nil) in
-            
             PersistenceManager.updateWith(meal: self.meals[indexPath.row], actionType: .remove) { [weak self] error in
                 guard let self  = self else {return}
                 guard let error = error else {
-                    
+
                     self.meals.remove(at: indexPath.row)
                     self.tableView.deleteRows(at: [indexPath], with: .none)
-                    self.updateUI(with: self.meals)
+                    if self.meals.isEmpty {
+                        self.showEmptyStateView(with: "You have no meals saved!\nAdd one by tapping the + button", in: self.view)
+                    }
                     return
                 }
                 self.presentMPAlertOnMainThread(title: "Unable to remove", message: error.rawValue, buttonTitle: "Ok")
@@ -134,24 +135,7 @@ extension MealsListVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedMeal = meals[indexPath.row]
         let destVC = MealDetailVC(meal: selectedMeal)
-        
+
         navigationController?.pushViewController(destVC, animated: true)
     }
-    
-    // swipe to delete user
-    //    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-    //        guard editingStyle == .delete else { return }
-    //
-    //        PersistenceManager.updateWith(meal: meals[indexPath.row], actionType: .remove) { [weak self] error in
-    //            guard let self  = self else {return}
-    //            guard let error = error else {
-    //
-    //                self.meals.remove(at: indexPath.row)
-    //                tableView.deleteRows(at: [indexPath], with: .automatic)
-    //                self.updateUI(with: self.meals)
-    //                return
-    //            }
-    //            self.presentMPAlertOnMainThread(title: "Unable to remove", message: error.rawValue, buttonTitle: "Ok")
-    //        }
-    //    }
 }
