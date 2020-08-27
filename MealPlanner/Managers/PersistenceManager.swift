@@ -23,23 +23,23 @@ enum PersistenceManager {
     static func updateWith(meal: Meal, actionType: PersistenceActionType, completed: @escaping (MPError?) -> Void) {
         retrieveMealsList { result in
             switch result {
-                case .success(var mealsList):
-                    
-                    switch actionType {
-                        case .add:
-                            guard !mealsList.contains(meal) else {
-                                completed(.alreadyInMealsList)
-                                return
-                            }
-                            mealsList.append(meal)
-                        
-                        case .remove:
-                            mealsList.removeAll(where: {$0.hashValue == meal.hashValue})
-                }
-                    completed(save(mealsList: mealsList))
+            case .success(var mealsList):
                 
-                case .failure(let error):
-                    completed(error)
+                switch actionType {
+                case .add:
+                    guard !mealsList.contains(meal) else {
+                        completed(.alreadyInMealsList)
+                        return
+                    }
+                    mealsList.append(meal)
+                    
+                case .remove:
+                    mealsList.removeAll(where: {$0.hashValue == meal.hashValue})
+                }
+                completed(save(mealsList: mealsList))
+                
+            case .failure(let error):
+                completed(error)
             }
         }
     }
