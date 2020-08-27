@@ -49,6 +49,18 @@ class MealCreatorVC: UIViewController {
         glutenLabel.text        = "Gluten Free?"
     }
     
+    init(with importedMeal: Meal?) {
+        super.init(nibName: nil, bundle: nil)
+        titleTextField.text         = importedMeal?.title ?? ""
+        descriptionTextField.text   = importedMeal?.shortDescription ?? ""
+        glutenToggle.isOn           = importedMeal?.glutenFree ?? false
+        vegetarianToggle.isOn       = importedMeal?.vegetarian ?? false
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     func configureSubmitButton() {
         submitButton.addTarget(self, action: #selector(submitButtonTapped), for: .touchUpInside)
     }
@@ -99,10 +111,6 @@ class MealCreatorVC: UIViewController {
     }
     
     func layoutViews() {
-        
-        // don't really know if i need to init these here, seemed like a good idea at the time
-        glutenToggle.isOn = false
-        vegetarianToggle.isOn = false
         
         view.addSubviews(titleLabel,
                          titleTextField,

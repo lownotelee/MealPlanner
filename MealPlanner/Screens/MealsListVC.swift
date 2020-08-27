@@ -77,7 +77,7 @@ class MealsListVC: MPDataLoadingVC, AddButtonTappedDelegate {
     }
     
     @objc func addButtonTapped() {
-        navigationController?.pushViewController(MealCreatorVC(), animated: true)   // TODO: Figure out how to transition to a SwiftUI view
+        navigationController?.pushViewController(MealCreatorVC(with: nil), animated: true)   // TODO: Figure out how to transition to a SwiftUI view
     }
 }
 
@@ -103,10 +103,8 @@ extension MealsListVC: UITableViewDataSource, UITableViewDelegate {
     }
     
     func editAction(at indexPath: IndexPath) -> UIContextualAction {
-        //let meal = meals[indexPath.row]
-        let action = UIContextualAction(style: .normal, title: "Edit") { (action, view, completion) in
-            print("you tapped edit")
-            completion(true)
+        let action = UIContextualAction(style: .normal, title: "Edit") { (action, view, nil) in
+            self.navigationController?.pushViewController(MealCreatorVC(with: self.meals[indexPath.row]), animated: true)
         }
         action.backgroundColor = UIColor.blue
         return action

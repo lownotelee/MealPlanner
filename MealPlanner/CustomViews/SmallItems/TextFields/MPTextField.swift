@@ -37,5 +37,4 @@ class MPTextField: UITextField {
         clearButtonMode     = .whileEditing     // gives a button to clear the text field
         placeholder         = "write some text here"
     }
-
 }
