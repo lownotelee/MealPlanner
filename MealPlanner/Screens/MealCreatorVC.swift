@@ -66,17 +66,17 @@ class MealCreatorVC: UIViewController {
     }
     
     @objc func submitButtonTapped() {
-        // all meals must have a title, check to see if it has been entered
-        // will need to be extended with other optional values
+        /// all meals must have a title, check to see if it has been entered
         guard isTitleEntered else {
             presentMPAlertOnMainThread(title: "Empty Title", message: "Please enter a title", buttonTitle: "Ok")
             return
         }
         
-        // create a meal based on the set parameters
+        /// create a meal based on the set parameters
+        /// will need to be extended with other optional values
         let createdMeal = Meal(withTitle: titleTextField.text!, shortDescription: descriptionTextField.text!, isVegetarian: vegetarianToggle.isOn, isGlutenFree: glutenToggle.isOn)
         
-        // save the meal to userdefaults
+        /// save the meal to userdefaults
         PersistenceManager.updateWith(meal: createdMeal, actionType: .add) { [weak self] error in
             guard let self = self else {return}
             guard let error = error else {
@@ -87,13 +87,13 @@ class MealCreatorVC: UIViewController {
         }
     }
     
-    // drop the keyboard when tapping on the view
+    /// drop the keyboard when tapping on the view
     func createDismissKeyboardTapGesture() {
         let tap = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing(_:)))
         view.addGestureRecognizer(tap)
     }
     
-    // horizontal stacks that contain dietary toggles
+    /// horizontal stacks that contain dietary toggles
     func setUpHStacks() {
         hstackview1.alignment = .trailing
         hstackview1.axis = .horizontal
@@ -120,7 +120,7 @@ class MealCreatorVC: UIViewController {
                          hstackview2,
                          submitButton)
         
-        // could maybe look at tinyconstraints but meh i think i'd rather make this page with swiftUI instead
+        /// could maybe look at tinyconstraints but meh i think i'd rather make this page with swiftUI instead
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: sidePadding),
