@@ -10,10 +10,10 @@ import Foundation
 
 enum MPError: String, Error {
     
-    //case invalidUsername        = "This username creates an invalid request. Please try again"               // probably isnt relevant
     case unableToComplete       = "Unable to complete your request. Please check your internet connection"
     case invalidResponse        = "Invalid response from the server. Please try again"
     case invalidData            = "The data received from the server was invalid. Please try again"
     case unableToSave           = "There was an error in saving this meal. Please try again"
-    case alreadyInMealsList     = "Meal already in meals list"
+    case alreadyInMealsList     = "This meal already in meals list"
+    case needUniqueTitle        = "Each meal needs a unique title. Please give it a new name and try again"
 }

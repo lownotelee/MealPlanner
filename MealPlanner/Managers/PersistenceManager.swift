@@ -27,14 +27,26 @@ enum PersistenceManager {
                 
                 switch actionType {
                 case .add:
-                    guard !mealsList.contains(meal) else {
-                        completed(.alreadyInMealsList)
+                    /// This bit had a check to see if the objects were the same, same as in the GHFollowers project.
+                    /// This compared hash values, which in this case were different because of the UUID
+                    
+                    /// If the title is the same on two different objects, give a popup warning thing
+                    if let _ = mealsList.first(where: {$0.title == meal.title && $0.identifier != meal.identifier}) {
+                        completed(.needUniqueTitle)
                         return
                     }
-                    mealsList.append(meal)
                     
+                    /// if the meal list contains an item with the same identifier, replace it with the meal passed in.
+                    if let i = mealsList.firstIndex(where: {$0.identifier == meal.identifier}) {
+                        mealsList[i] = meal
+                    } else {
+                        /// If all is good, whack the meal on the list
+                        mealsList.append(meal)
+                    }
+
                 case .remove:
-                    mealsList.removeAll(where: {$0.hashValue == meal.hashValue})
+                    mealsList.removeAll(where: {$0.identifier == meal.identifier})
+                    
                 }
                 completed(save(mealsList: mealsList))
                 
@@ -47,7 +59,7 @@ enum PersistenceManager {
     static func retrieveMealsList(completed: @escaping (Result<[Meal], MPError>) -> Void) {
         
         guard let mealsData = defaults.object(forKey: Keys.meals) as? Data else {
-            // if this is nil, then theres no data in there
+            /// if this is nil, then there's no data in there
             completed(.success([]))
             return
         }

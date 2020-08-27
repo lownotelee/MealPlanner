@@ -9,6 +9,8 @@
 import UIKit
 
 struct Meal: Codable, Hashable {
+    let identifier: UUID
+    
     var title: String           // title of the meal
     //var subTitle: String?       // other bits of the recpie ie pumpkin soup with croutons
     //var avatar: UIImage?        // picture of the meal
@@ -26,6 +28,7 @@ struct Meal: Codable, Hashable {
     }
     
     init(withTitle title: String, shortDescription: String?, isVegetarian vegetarianOption: Bool, isGlutenFree glutenFreeOption: Bool) {
+        identifier = UUID()
         self.title = title
         self.shortDescription = shortDescription
         self.glutenFree = glutenFreeOption

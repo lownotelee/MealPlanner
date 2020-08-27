@@ -24,7 +24,7 @@ class MealDetailVC: UIViewController {
     }
     
     func addDescriptionLabel() {
-        view.addSubview(descriptionLabel)
+        view.addSubviews(descriptionLabel)
         NSLayoutConstraint.activate([
             descriptionLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),

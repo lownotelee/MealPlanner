@@ -35,6 +35,8 @@ class MealCreatorVC: UIViewController {
     let elementPadding: CGFloat     = 10
     let bodyLabelHeight: CGFloat    = 40
     
+    var mealToSubmit: Meal?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -55,6 +57,7 @@ class MealCreatorVC: UIViewController {
         descriptionTextField.text   = importedMeal?.shortDescription ?? ""
         glutenToggle.isOn           = importedMeal?.glutenFree ?? false
         vegetarianToggle.isOn       = importedMeal?.vegetarian ?? false
+        mealToSubmit                = importedMeal
     }
     
     required init?(coder: NSCoder) {
@@ -71,13 +74,20 @@ class MealCreatorVC: UIViewController {
             presentMPAlertOnMainThread(title: "Empty Title", message: "Please enter a title", buttonTitle: "Ok")
             return
         }
-        
         /// create a meal based on the set parameters
-        /// will need to be extended with other optional values
-        let createdMeal = Meal(withTitle: titleTextField.text!, shortDescription: descriptionTextField.text!, isVegetarian: vegetarianToggle.isOn, isGlutenFree: glutenToggle.isOn)
+        
+        /// if the meal to submit contains data, then update the existing data with stuff from the view.
+        if mealToSubmit != nil {
+            mealToSubmit?.title             = titleTextField.text!
+            mealToSubmit?.shortDescription  = descriptionTextField.text
+            mealToSubmit?.vegetarian        = vegetarianToggle.isOn
+            mealToSubmit?.glutenFree        = glutenToggle.isOn
+        } else { /// otherwise, create a new meal with stuff from the view.
+            mealToSubmit = Meal(withTitle: titleTextField.text!, shortDescription: descriptionTextField.text, isVegetarian: vegetarianToggle.isOn, isGlutenFree: glutenToggle.isOn)
+        }
         
         /// save the meal to userdefaults
-        PersistenceManager.updateWith(meal: createdMeal, actionType: .add) { [weak self] error in
+        PersistenceManager.updateWith(meal: mealToSubmit!, actionType: .add) { [weak self] error in
             guard let self = self else {return}
             guard let error = error else {
                 self.navigationController?.popViewController(animated: true)
