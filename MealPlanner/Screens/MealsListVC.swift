@@ -20,6 +20,8 @@ class MealsListVC: MPDataLoadingVC, AddButtonTappedDelegate {
     let tableView       = UITableView()
     var meals: [Meal]   = []      // empty array of meals
     
+    let noMealsWarning = "\(GeneralConstants.noMeals)\n\(GeneralConstants.useAddButton)"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViewController()
@@ -36,7 +38,7 @@ class MealsListVC: MPDataLoadingVC, AddButtonTappedDelegate {
     func configureTableView() {
         view.addSubview(tableView)
         tableView.frame         = view.bounds
-        tableView.rowHeight     = 80
+        tableView.rowHeight     = 70
         tableView.delegate      = self
         tableView.dataSource    = self
         tableView.register(MealsCell.self, forCellReuseIdentifier: MealsCell.reuseID)
@@ -44,7 +46,7 @@ class MealsListVC: MPDataLoadingVC, AddButtonTappedDelegate {
     }
     
     func getMeals() {
-        PersistenceManager.retrieveMealsList { [weak self] result in
+        PersistenceManager.retrieveMealsList(fromList: .allMeals, completed: { [weak self] result in
             guard let self = self else {return}
             switch result {
             case .success(let mealsList):
@@ -53,7 +55,7 @@ class MealsListVC: MPDataLoadingVC, AddButtonTappedDelegate {
             case .failure(let error):
                 self.presentMPAlertOnMainThread(title: "Something went wrong", message: error.rawValue, buttonTitle: "Ok")
             }
-        }
+        })
     }
     
     func configureViewController() {
@@ -65,7 +67,7 @@ class MealsListVC: MPDataLoadingVC, AddButtonTappedDelegate {
     
     func updateUI(with meals: [Meal]) {
         if meals.isEmpty {
-            self.showEmptyStateView(with: "You have no meals saved!\nAdd one by tapping the + button", in: self.view)
+            self.showEmptyStateView(with: noMealsWarning, in: self.view)
         } else {
             self.meals = meals
             DispatchQueue.main.async {
@@ -106,27 +108,27 @@ extension MealsListVC: UITableViewDataSource, UITableViewDelegate {
         let action = UIContextualAction(style: .normal, title: "Edit") { (action, view, nil) in
             self.navigationController?.pushViewController(MealCreatorVC(with: self.meals[indexPath.row]), animated: true)
         }
-        action.backgroundColor = UIColor.blue
+        action.backgroundColor = UIColor.systemBlue
         return action
     }
     
     func deleteAction(at indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .destructive, title: "Delete") { (action, view, nil) in
-            PersistenceManager.updateWith(meal: self.meals[indexPath.row], actionType: .remove) { [weak self] error in
+            PersistenceManager.updateWith(meal: self.meals[indexPath.row], actionType: .remove, toList: .allMeals) { [weak self] error in
                 guard let self  = self else {return}
                 guard let error = error else {
 
                     self.meals.remove(at: indexPath.row)
                     self.tableView.deleteRows(at: [indexPath], with: .automatic)
                     if self.meals.isEmpty {
-                        self.showEmptyStateView(with: "You have no meals saved!\nAdd one by tapping the + button", in: self.view)
+                        self.showEmptyStateView(with: self.noMealsWarning, in: self.view)
                     }
                     return
                 }
                 self.presentMPAlertOnMainThread(title: "Unable to remove", message: error.rawValue, buttonTitle: "Ok")
             }
         }
-        action.backgroundColor = UIColor.red
+        action.backgroundColor = UIColor.systemRed
         return action
     }
     

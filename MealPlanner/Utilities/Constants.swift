@@ -8,6 +8,13 @@
 
 import UIKit
 
+enum GeneralConstants {
+    static let daysInWeek: Int  = 7
+    static let noMeals: String  = "You have no meals saved!"
+    static let useAddButton     = "Add one by tapping the + button"
+    static let useMealsList     = "Add one in the meals list"
+}
+
 enum SFSymbols {
     static let calendar         = UIImage(systemName: "calendar")
     static let list             = UIImage(systemName: "text.badge.plus")

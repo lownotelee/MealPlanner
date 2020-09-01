@@ -16,12 +16,13 @@ enum PersistenceActionType {
 enum PersistenceManager {
     static private let defaults = UserDefaults.standard
     
-    enum Keys {
-        static let meals = "meals"
+    enum Keys: String {
+        case allMeals     = "meals"
+        case weekMeals    = "weekMeals"
     }
-    
-    static func updateWith(meal: Meal, actionType: PersistenceActionType, completed: @escaping (MPError?) -> Void) {
-        retrieveMealsList { result in
+
+    static func updateWith(meal: Meal, actionType: PersistenceActionType, toList: Keys, completed: @escaping (MPError?) -> Void) {
+        retrieveMealsList(fromList: toList) { result in
             switch result {
             case .success(var mealsList):
                 
@@ -46,9 +47,9 @@ enum PersistenceManager {
 
                 case .remove:
                     mealsList.removeAll(where: {$0.identifier == meal.identifier})
-                    
                 }
-                completed(save(mealsList: mealsList))
+                
+                completed(save(mealsList: mealsList, to: toList))
                 
             case .failure(let error):
                 completed(error)
@@ -56,9 +57,9 @@ enum PersistenceManager {
         }
     }
     
-    static func retrieveMealsList(completed: @escaping (Result<[Meal], MPError>) -> Void) {
+    static func retrieveMealsList(fromList: Keys, completed: @escaping (Result<[Meal], MPError>) -> Void) {
         
-        guard let mealsData = defaults.object(forKey: Keys.meals) as? Data else {
+        guard let mealsData = defaults.object(forKey: fromList.rawValue) as? Data else {
             /// if this is nil, then there's no data in there
             completed(.success([]))
             return
@@ -74,12 +75,12 @@ enum PersistenceManager {
         
     }
     
-    static func save(mealsList: [Meal]) -> MPError? {
+    static func save(mealsList: [Meal], to list: Keys) -> MPError? {
         
         do {
             let encoder = JSONEncoder()
             let encodedMealsList = try encoder.encode(mealsList)
-            defaults.set(encodedMealsList, forKey: Keys.meals)
+            defaults.set(encodedMealsList, forKey: list.rawValue)
             return nil
         } catch {
             return .unableToSave

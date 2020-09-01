@@ -87,7 +87,7 @@ class MealCreatorVC: UIViewController {
         }
         
         /// save the meal to userdefaults
-        PersistenceManager.updateWith(meal: mealToSubmit!, actionType: .add) { [weak self] error in
+        PersistenceManager.updateWith(meal: mealToSubmit!, actionType: .add, toList: .allMeals) { [weak self] error in
             guard let self = self else {return}
             guard let error = error else {
                 self.navigationController?.popViewController(animated: true)
