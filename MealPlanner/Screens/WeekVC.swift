@@ -117,6 +117,7 @@ class WeekVC: MPDataLoadingVC {
         return weekMealList
     }
     
+    // TODO: Figure out how to pad out the list if it's less than 7 meals, and fill them with placeholder/takeaway meals
     @objc func getMealsForWeek() {
         var weekList: [Meal] = []
         let allMeals = getAllMeals()
