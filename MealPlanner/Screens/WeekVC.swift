@@ -20,7 +20,9 @@ class WeekVC: MPDataLoadingVC {
     let noMealsWarning = "\(GeneralConstants.noMeals)\n\(GeneralConstants.useMealsList)"
     
     override func viewDidLoad() {
+        // TODO: Load up meals from the list
         super.viewDidLoad()
+        getWeekMeals()
         configureViewController()
         configureButtonViewArea()
         configureTableView()
@@ -29,6 +31,7 @@ class WeekVC: MPDataLoadingVC {
     
     func configureTableView() {
         view.addSubview(tableView)
+        // TODO: Figure out how to dynamically set row height based on text size
         tableView.rowHeight     = 70
         tableView.delegate      = self
         tableView.dataSource    = self
@@ -46,6 +49,7 @@ class WeekVC: MPDataLoadingVC {
     }
     
     func getWeekMeals() {
+        print("getting week meals")
         PersistenceManager.retrieveMealsList(fromList: .weekMeals, completed: { [weak self] result in
             guard let self = self else {return}
             switch result {

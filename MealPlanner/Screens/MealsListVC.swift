@@ -72,7 +72,7 @@ class MealsListVC: MPDataLoadingVC, AddButtonTappedDelegate {
             self.meals = meals
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                // bring table view to front in case the empty state view was there before
+                /// bring table view to front in case the empty state view was there before
                 self.view.bringSubviewToFront(self.tableView)
             }
         }
