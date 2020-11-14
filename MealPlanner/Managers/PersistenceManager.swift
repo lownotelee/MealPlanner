@@ -32,6 +32,7 @@ enum PersistenceManager {
                     /// This compared hash values, which in this case were different because of the UUID
                     
                     /// If the title is the same on two different objects, give a popup warning thing
+                    // TODO: Return the duplicate meal to show what the other thing is
                     if let _ = mealsList.first(where: {$0.title == meal.title && $0.identifier != meal.identifier}) {
                         completed(.needUniqueTitle)
                         return
