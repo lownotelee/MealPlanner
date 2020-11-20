@@ -38,13 +38,6 @@ class MPDataLoadingVC: UIViewController {
             self.containerView = nil
         }
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-    
 
     func showEmptyStateView(with message:String, in view: UIView) {
         let emptyStateView = MPEmptyStateView(message: message)

@@ -1,10 +1,3 @@
-//
-//  ListVC.swift
-//  MealPlanner
-//
-//  Created by Lee on 31/7/20.
-//  Copyright © 2020 radev. All rights reserved.
-//
 //  This view will have a list of all the meals entered into the app.
 //  I want to have a place to filter all the meals by dietary
 //
@@ -26,13 +19,20 @@ class MealsListVC: MPDataLoadingVC, AddButtonTappedDelegate {
         super.viewDidLoad()
         configureViewController()
         configureTableView()
-        updateUI(with: meals)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: true)
+        //navigationController?.setNavigationBarHidden(false, animated: true)
         getMeals()
+        updateUI(with: meals)
+    }
+    
+    func configureViewController() {
+        view.backgroundColor    = .systemBackground
+        title                   = "Meals"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped))
     }
     
     func configureTableView() {
@@ -58,13 +58,6 @@ class MealsListVC: MPDataLoadingVC, AddButtonTappedDelegate {
         })
     }
     
-    func configureViewController() {
-        view.backgroundColor    = .systemBackground
-        title                   = "Meals"
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped))
-    }
-    
     func updateUI(with meals: [Meal]) {
         if meals.isEmpty {
             self.showEmptyStateView(with: noMealsWarning, in: self.view)
@@ -79,7 +72,9 @@ class MealsListVC: MPDataLoadingVC, AddButtonTappedDelegate {
     }
     
     @objc func addButtonTapped() {
-        navigationController?.pushViewController(MealCreatorVC(with: nil), animated: true)   // TODO: Figure out how to transition to a SwiftUI view
+        //navigationController?.pushViewController(MealCreatorVC(with: nil), animated: true)
+        //Using show instead of pushViewController because it lets it decide the best way to show. apparently works better on iPad. Got it from Swift By Sundel
+        show(MealCreatorVC(with: nil), sender: self)
     }
 }
 

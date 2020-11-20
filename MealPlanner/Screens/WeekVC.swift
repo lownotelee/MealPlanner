@@ -6,6 +6,15 @@
 //  Copyright © 2020 radev. All rights reserved.
 //
 
+/// NOTES
+/// So I fixed the inital bug that the list wasnt appearing when the view was loaded
+/// But now the list changes whenever the view appears again
+/// It looks like I'm not actually saving the list anywhere, so I need to use the persistenceManager
+/// stuff from MealCreatorVC to save it to userdefaults and then grab it again when the view appears
+/// I should probably break out the randomise function to another function as well
+///
+
+
 import UIKit
 
 class WeekVC: MPDataLoadingVC {
@@ -22,11 +31,22 @@ class WeekVC: MPDataLoadingVC {
     override func viewDidLoad() {
         // TODO: Load up meals from the list
         super.viewDidLoad()
-        getWeekMeals()
+        
         configureViewController()
         configureButtonViewArea()
         configureTableView()
         configureSubmitButton()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        createWeekMealsList()
+        updateUI(with: weekOfMeals)
+    }
+    
+    func configureViewController() {
+        view.backgroundColor = .systemBackground
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     func configureTableView() {
@@ -49,17 +69,28 @@ class WeekVC: MPDataLoadingVC {
     }
     
     func getWeekMeals() {
-        print("getting week meals")
         PersistenceManager.retrieveMealsList(fromList: .weekMeals, completed: { [weak self] result in
             guard let self = self else {return}
             switch result {
             case .success(let weekMealsList):
-                self.updateUI(with: weekMealsList)
+                self.weekOfMeals = weekMealsList
                 
             case .failure(let error):
                 self.presentMPAlertOnMainThread(title: "Something went wrong", message: error.rawValue, buttonTitle: "Ok")
             }
         })
+    }
+    
+    private func saveWeekMealsToUserDefaults(arrayOfMeals: [Meal]) {
+        for meal in arrayOfMeals {
+            PersistenceManager.updateWith(meal: meal, actionType: .add, toList: .weekMeals) { [weak self] error in
+                guard let self = self else {return}
+                guard let error = error else {
+                    return
+                }
+                self.presentMPAlertOnMainThread(title: "Something went wrong", message: error.rawValue, buttonTitle: "Ok")
+            }
+        }
     }
     
     func updateUI(with meals: [Meal]) {
@@ -75,12 +106,9 @@ class WeekVC: MPDataLoadingVC {
         }
     }
     
-    func configureViewController() {
-        navigationController?.navigationBar.prefersLargeTitles = true
-        view.backgroundColor = .systemBackground
-    }
     
-    func configureButtonViewArea() {
+    
+    private func configureButtonViewArea() {
         view.addSubviews(buttonViewArea, randomiseButton)
         
         buttonViewArea.translatesAutoresizingMaskIntoConstraints = false
@@ -99,11 +127,11 @@ class WeekVC: MPDataLoadingVC {
         ])
     }
     
-    func configureSubmitButton() {
-        randomiseButton.addTarget(self, action: #selector(getMealsForWeek), for: .touchUpInside)
+    private func configureSubmitButton() {
+        randomiseButton.addTarget(self, action: #selector(createWeekMealsList), for: .touchUpInside)
     }
     
-    func getAllMeals() -> [Meal] {
+    private func getAllMeals() -> [Meal] {
         var weekMealList: [Meal] = []
         
         PersistenceManager.retrieveMealsList(fromList: .allMeals, completed: { [weak self] result in
@@ -122,7 +150,7 @@ class WeekVC: MPDataLoadingVC {
     }
     
     // TODO: Figure out how to pad out the list if it's less than 7 meals, and fill them with placeholder/takeaway meals
-    @objc func getMealsForWeek() {
+    @objc func createWeekMealsList() {
         var weekList: [Meal] = []
         let allMeals = getAllMeals()
         var listOfSevenRandomNumbers = Array(0..<allMeals.count)

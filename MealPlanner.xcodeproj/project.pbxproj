@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9B012E1924DE5C3C00E68267 /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B012E1824DE5C3C00E68267 /* PersistenceManager.swift */; };
 		9B012E1B24DE5DF300E68267 /* ErrorMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B012E1A24DE5DF300E68267 /* ErrorMessage.swift */; };
+		9B30AA662563AA0700200E70 /* TestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B30AA652563AA0700200E70 /* TestVC.swift */; };
 		9B57DE6E24D3CFD1002B8B42 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B57DE6D24D3CFD1002B8B42 /* AppDelegate.swift */; };
 		9B57DE7024D3CFD1002B8B42 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B57DE6F24D3CFD1002B8B42 /* SceneDelegate.swift */; };
 		9B57DE7224D3CFD1002B8B42 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B57DE7124D3CFD1002B8B42 /* ViewController.swift */; };
@@ -41,6 +42,7 @@
 /* Begin PBXFileReference section */
 		9B012E1824DE5C3C00E68267 /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
 		9B012E1A24DE5DF300E68267 /* ErrorMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorMessage.swift; sourceTree = "<group>"; };
+		9B30AA652563AA0700200E70 /* TestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestVC.swift; sourceTree = "<group>"; };
 		9B57DE6A24D3CFD1002B8B42 /* MealPlanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MealPlanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B57DE6D24D3CFD1002B8B42 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9B57DE6F24D3CFD1002B8B42 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 			children = (
 				9B57DE8B24D3D3C2002B8B42 /* WeekVC.swift */,
 				9B57DE8D24D3DE06002B8B42 /* MealsListVC.swift */,
+				9B30AA652563AA0700200E70 /* TestVC.swift */,
 				9BA61D5E24D45475008A625E /* MealCreatorVC.swift */,
 				9B6E4D1724DFFA050008558F /* MealDetailVC.swift */,
 				9BDFFE4624D5626E0077C3D1 /* TestMealCreatorVC.swift */,
@@ -354,6 +357,7 @@
 				9B57DE6E24D3CFD1002B8B42 /* AppDelegate.swift in Sources */,
 				9B57DE7024D3CFD1002B8B42 /* SceneDelegate.swift in Sources */,
 				9B6E4D1024DFD7410008558F /* MPButton.swift in Sources */,
+				9B30AA662563AA0700200E70 /* TestVC.swift in Sources */,
 				9BF82BA224D4E771007B2F70 /* UITableView+Ext.swift in Sources */,
 				9BF82BAB24D4E97E007B2F70 /* MPTitleLabel.swift in Sources */,
 				9B012E1924DE5C3C00E68267 /* PersistenceManager.swift in Sources */,

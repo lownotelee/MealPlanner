@@ -76,7 +76,7 @@ enum PersistenceManager {
         
     }
     
-    static func save(mealsList: [Meal], to list: Keys) -> MPError? {
+    private static func save(mealsList: [Meal], to list: Keys) -> MPError? {
         
         do {
             let encoder = JSONEncoder()
