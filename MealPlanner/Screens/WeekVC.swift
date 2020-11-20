@@ -40,16 +40,16 @@ class WeekVC: MPDataLoadingVC {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        createWeekMealsList()
+        getWeekMeals()
         updateUI(with: weekOfMeals)
     }
     
-    func configureViewController() {
+    private func configureViewController() {
         view.backgroundColor = .systemBackground
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
-    func configureTableView() {
+    private func configureTableView() {
         view.addSubview(tableView)
         // TODO: Figure out how to dynamically set row height based on text size
         tableView.rowHeight     = 70
@@ -93,9 +93,26 @@ class WeekVC: MPDataLoadingVC {
         }
     }
     
+    /// created this function because it'll be useful in swipe to delete actions
+    private func removeMealFromWeekList(mealToRemove: Meal) {
+        PersistenceManager.updateWith(meal: mealToRemove, actionType: .remove, toList: .weekMeals) { [weak self] error in
+            guard let self = self else {return}
+            guard let error = error else {
+                return
+            }
+            self.presentMPAlertOnMainThread(title: "Something went wrong", message: error.rawValue, buttonTitle: "Ok")
+        }
+    }
+    
+    private func removeWeekMealsFromUserDefaults(arrayOfMeals: [Meal]) {
+        for meal in arrayOfMeals {
+            removeMealFromWeekList(mealToRemove: meal)
+        }
+    }
+    
     func updateUI(with meals: [Meal]) {
         if meals.isEmpty {
-            self.showEmptyStateView(with: noMealsWarning, in: self.view)
+            //self.showEmptyStateView(with: noMealsWarning, in: self.view)
         } else {
             self.weekOfMeals = meals
             DispatchQueue.main.async {
@@ -105,8 +122,6 @@ class WeekVC: MPDataLoadingVC {
             }
         }
     }
-    
-    
     
     private func configureButtonViewArea() {
         view.addSubviews(buttonViewArea, randomiseButton)
@@ -128,7 +143,7 @@ class WeekVC: MPDataLoadingVC {
     }
     
     private func configureSubmitButton() {
-        randomiseButton.addTarget(self, action: #selector(createWeekMealsList), for: .touchUpInside)
+        randomiseButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
     }
     
     private func getAllMeals() -> [Meal] {
@@ -149,21 +164,30 @@ class WeekVC: MPDataLoadingVC {
         return weekMealList
     }
     
+    @objc private func buttonAction() {
+        print("button hit")
+        if !weekOfMeals.isEmpty {
+            removeWeekMealsFromUserDefaults(arrayOfMeals: weekOfMeals)
+        }
+        weekOfMeals = createWeekMealsList()
+        saveWeekMealsToUserDefaults(arrayOfMeals: weekOfMeals)
+        updateUI(with: weekOfMeals)
+    }
+    
     // TODO: Figure out how to pad out the list if it's less than 7 meals, and fill them with placeholder/takeaway meals
-    @objc func createWeekMealsList() {
+    func createWeekMealsList() -> [Meal] {
         var weekList: [Meal] = []
         let allMeals = getAllMeals()
         var listOfSevenRandomNumbers = Array(0..<allMeals.count)
         
         listOfSevenRandomNumbers.shuffle()
-        if listOfSevenRandomNumbers.count > 7 {
-            listOfSevenRandomNumbers.removeSubrange(7...)
-        }
+        listOfSevenRandomNumbers.removeSubrange(7...)
         
         for element in listOfSevenRandomNumbers {
             weekList.append(allMeals[element])
         }
-        updateUI(with: weekList)
+        
+        return weekList
     }
 }
 
@@ -220,7 +244,8 @@ extension WeekVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedMeal = weekOfMeals[indexPath.row]
         let destVC = MealDetailVC(meal: selectedMeal)
+        show(destVC, sender: self)
         
-        navigationController?.pushViewController(destVC, animated: true)
+        //navigationController?.pushViewController(destVC, animated: true)
     }
 }
