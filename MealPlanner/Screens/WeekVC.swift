@@ -157,10 +157,8 @@ class WeekVC: MPDataLoadingVC {
                 
             case .failure(let error):
                 self.presentMPAlertOnMainThread(title: "Something went wrong", message: error.rawValue, buttonTitle: "Ok")
-                
             }
         })
-        
         return weekMealList
     }
     
@@ -212,6 +210,7 @@ extension WeekVC: UITableViewDataSource, UITableViewDelegate {
         return UISwipeActionsConfiguration(actions: [edit])
     }
     
+    // TODO: Make this do something
     func editAction(at indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .normal, title: "Change") { (action, view, nil) in
             print("fucken lol")
