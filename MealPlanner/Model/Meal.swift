@@ -15,9 +15,7 @@ struct Meal: Codable, Hashable {
     //var subTitle: String?       // other bits of the recpie ie pumpkin soup with croutons
     //var avatar: UIImage?        // picture of the meal
     //let sourceURL: String?      // URL where recipe/meal was found
-    var shortDescription: String?   // quick description of the meal
-    var glutenFree: Bool
-    var vegetarian: Bool
+    //var shortDescription: String?   // quick description of the meal
     
     
     struct attributes {
@@ -27,11 +25,9 @@ struct Meal: Codable, Hashable {
 //        var fodmapFriendly: Bool
     }
     
-    init(withTitle title: String, shortDescription: String?, isVegetarian vegetarianOption: Bool, isGlutenFree glutenFreeOption: Bool) {
+    init(withTitle title: String/*, shortDescription: String?*/) {
         identifier = UUID()
         self.title = title
-        self.shortDescription = shortDescription
-        self.glutenFree = glutenFreeOption
-        self.vegetarian = vegetarianOption
+        //self.shortDescription = shortDescription
     }
 }
