@@ -4,7 +4,7 @@
 
 import UIKit
 
-protocol AddButtonTappedDelegate: class {
+protocol AddButtonTappedDelegate: AnyObject {
     func addButtonTapped()
 }
 

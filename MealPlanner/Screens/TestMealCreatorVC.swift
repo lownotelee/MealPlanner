@@ -9,35 +9,12 @@
 import SwiftUI
 
 struct TestMealCreatorVC: View {
-    
-    @State private var isVegan          = false
-    @State private var isVegetarian     = false
-    @State private var isGlutenFree     = false
-    @State private var isFodmapFriendly = false
     @State private var description: String = ""
     
     var body: some View {
         VStack{
             TextField("Description", text: $description).padding()
-            HStack{
-                VStack{
-                    Toggle(isOn: $isVegan) {
-                        Text("Vegan")
-                    }.padding()
-                    Toggle(isOn: $isVegetarian) {
-                        Text("Vegetarian")
-                    }.padding()
-                }
-                VStack {
-                    Toggle(isOn: $isGlutenFree) {
-                        Text("Gluten Free")
-                    }.padding()
-                    Toggle(isOn: $isFodmapFriendly) {
-                        Text("FODMAP Friendly")
-                    }.padding()
-                }
-                
-            }
+
             Button(action: {self.buttonAction()}) {
                 Text("Submit").padding()
             }
@@ -45,7 +22,7 @@ struct TestMealCreatorVC: View {
     }
     
     func buttonAction() {
-        print("vegan option is \(self.isVegan)")
+        print("yeah gday fellas")
     }
 }
 

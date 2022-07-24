@@ -15,5 +15,5 @@ enum MPError: String, Error {
     case invalidData            = "The data received from the server was invalid. Please try again"
     case unableToSave           = "There was an error in saving this meal. Please try again"
     case alreadyInMealsList     = "This meal already in meals list"
-    case needUniqueTitle        = "Each meal needs a unique title. Please give it a new name and try again"
+    case needUniqueTitle        = "You've already got something with that name. Please give it a new name and try again"
 }
