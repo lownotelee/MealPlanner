@@ -12,9 +12,9 @@ struct Meal: Codable, Hashable {
     let identifier: UUID
     
     var title: String           // title of the meal
-    //var subTitle: String?       // other bits of the recpie ie pumpkin soup with croutons
-    //var avatar: UIImage?        // picture of the meal
-    //let sourceURL: String?      // URL where recipe/meal was found
+//    var subTitle: String?       // other bits of the recpie ie pumpkin soup with croutons
+//    var avatar: UIImage?        // picture of the meal
+//    let sourceURL: String?      // URL where recipe/meal was found
     
     init(withTitle title: String) {
         identifier = UUID()

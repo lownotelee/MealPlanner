@@ -16,7 +16,8 @@ enum GeneralConstants {
 }
 
 struct Images {
-    static let cellDefaultBackgroundImage = UIImage(named: "MP-Food_placeholder_3")!
+    static let cellDefaultBackgroundImage   = UIImage(named: "MP-Food_placeholder_3")!
+    static let friedRice                    = UIImage(named: "fried-rice")!
 }
 
 enum SFSymbols {
