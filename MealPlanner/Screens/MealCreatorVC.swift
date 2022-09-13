@@ -13,8 +13,19 @@ class MealCreatorVC: UIViewController {
     let titleLabel              = MPTitleLabel()
     let titleTextField          = MPTextField()
     
-    let descriptionLabel        = MPTitleLabel()
-    let descriptionTextField    = MPTextField()
+
+//    let descriptionLabel        = MPTitleLabel()
+//    let descriptionTextField    = MPTextField()
+//
+//    let vegetarianLabel         = MPBodyLabel()
+//    let vegetarianToggle        = MPSwitch()
+//
+//    let glutenLabel             = MPBodyLabel()
+//    let glutenToggle            = MPSwitch()
+//
+//    let hstackview1             = UIStackView()
+//    let hstackview2             = UIStackView()
+
     
     let submitButton            = MPButton(backgroundColor: .systemGreen, title: "Submit")
     
@@ -31,17 +42,28 @@ class MealCreatorVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+//        setUpHStacks()
+
         layoutViews()
         configureSubmitButton()
         createDismissKeyboardTapGesture()
         
         titleLabel.text         = "Title"
+
+//        descriptionLabel.text   = "Description"
+//        vegetarianLabel.text    = "Vegetarian?"
+//        glutenLabel.text        = "Gluten Free?"
+
     }
     
     init(with importedMeal: Meal?) {
         super.init(nibName: nil, bundle: nil)
         titleTextField.text         = importedMeal?.title ?? ""
 //        descriptionTextField.text   = importedMeal?.shortDescription ?? ""
+
+//        glutenToggle.isOn           = importedMeal?.glutenFree ?? false
+//        vegetarianToggle.isOn       = importedMeal?.vegetarian ?? false
+
         mealToSubmit                = importedMeal
     }
     
@@ -65,6 +87,7 @@ class MealCreatorVC: UIViewController {
         if mealToSubmit != nil {
             mealToSubmit?.title             = titleTextField.text!
 //            mealToSubmit?.shortDescription  = descriptionTextField.text
+
         } else { /// otherwise, create a new meal with stuff from the view.
             mealToSubmit = Meal(withTitle: titleTextField.text!/*, shortDescription: descriptionTextField.text*/)
         }
@@ -86,12 +109,32 @@ class MealCreatorVC: UIViewController {
         view.addGestureRecognizer(tap)
     }
     
+    /// horizontal stacks that contain dietary toggles
+//    func setUpHStacks() {
+//        hstackview1.alignment = .trailing
+//        hstackview1.axis = .horizontal
+//        hstackview1.addArrangedSubview(vegetarianLabel)
+//        hstackview1.addArrangedSubview(vegetarianToggle)
+//        hstackview1.distribution = .equalCentering
+//        hstackview1.translatesAutoresizingMaskIntoConstraints = false
+//
+//        hstackview2.alignment = .trailing
+//        hstackview2.axis = .horizontal
+//        hstackview2.addArrangedSubview(glutenLabel)
+//        hstackview2.addArrangedSubview(glutenToggle)
+//        hstackview2.distribution = .equalCentering
+//        hstackview2.translatesAutoresizingMaskIntoConstraints = false
+//    }
+
     func layoutViews() {
         
         view.addSubviews(titleLabel,
                          titleTextField,
 //                         descriptionLabel,
 //                         descriptionTextField,
+//                         hstackview1,
+//                         hstackview2,
+
                          submitButton)
         
         /// could maybe look at tinyconstraints but meh i think i'd rather make this page with swiftUI instead
@@ -105,7 +148,7 @@ class MealCreatorVC: UIViewController {
             titleTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: sidePadding),
             titleTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -sidePadding),
             titleTextField.heightAnchor.constraint(equalToConstant: bodyLabelHeight),
-            
+
 //            descriptionLabel.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: elementPadding),
 //            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: sidePadding),
 //            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -sidePadding),
@@ -115,6 +158,17 @@ class MealCreatorVC: UIViewController {
 //            descriptionTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: sidePadding),
 //            descriptionTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -sidePadding),
 //            descriptionTextField.heightAnchor.constraint(equalToConstant: bodyLabelHeight),
+            
+//            hstackview1.topAnchor.constraint(equalTo: descriptionTextField.bottomAnchor, constant: elementPadding),
+//            hstackview1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: sidePadding),
+//            hstackview1.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -sidePadding),
+//            hstackview1.heightAnchor.constraint(equalToConstant: bodyLabelHeight),
+//
+//            hstackview2.topAnchor.constraint(equalTo: hstackview1.bottomAnchor, constant: elementPadding),
+//            hstackview2.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: sidePadding),
+//            hstackview2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -sidePadding),
+//            hstackview2.heightAnchor.constraint(equalToConstant: bodyLabelHeight),
+
             
             submitButton.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 50),
             submitButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),

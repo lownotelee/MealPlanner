@@ -19,10 +19,10 @@ class MealDetailVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViewController()
-        addDescriptionLabel()
+        //addDescriptionLabel()
         
     }
-    
+    /*
     func addDescriptionLabel() {
         view.addSubviews(descriptionLabel)
         NSLayoutConstraint.activate([
@@ -31,7 +31,7 @@ class MealDetailVC: UIViewController {
             descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
             descriptionLabel.heightAnchor.constraint(equalToConstant: 30)
         ])
-    }
+    }*/
     
     func configureViewController() {
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -46,7 +46,9 @@ class MealDetailVC: UIViewController {
     init(meal: Meal) {
         super.init(nibName: nil, bundle: nil)
         title           = meal.title
+
 //        descriptionLabel.text = meal.shortDescription ?? "no description"
+
     }
     
     required init?(coder: NSCoder) {
