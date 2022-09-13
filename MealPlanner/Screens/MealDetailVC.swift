@@ -46,7 +46,9 @@ class MealDetailVC: UIViewController {
     init(meal: Meal) {
         super.init(nibName: nil, bundle: nil)
         title           = meal.title
-        //descriptionLabel.text = meal.shortDescription ?? "no description"
+
+//        descriptionLabel.text = meal.shortDescription ?? "no description"
+
     }
     
     required init?(coder: NSCoder) {

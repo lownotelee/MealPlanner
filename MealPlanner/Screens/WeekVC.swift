@@ -173,6 +173,11 @@ class WeekVC: MPDataLoadingVC {
     }
     
     // TODO: Figure out how to pad out the list if it's less than 7 meals, and fill them with placeholder/takeaway meals
+    // TODO: There's a pretty big issue with this in that it just creates a copy of the meals in the list.
+    // If a meal is deleted, it's not deleted here as well.
+    // Do I need to have an external meal list model/controller?
+    // I think I should have an array of meal IDs, and use that to find the meal in the list
+    // Probably means I need to make the meal list a set
     func createWeekMealsList() -> [Meal] {
         var weekList: [Meal] = []
         let allMeals = getAllMeals()
@@ -213,7 +218,7 @@ extension WeekVC: UITableViewDataSource, UITableViewDelegate {
     // TODO: Make this do something
     func editAction(at indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .normal, title: "Change") { (action, view, nil) in
-            print("fucken lol")
+            print("lol")
             //            self.navigationController?.pushViewController(MealCreatorVC(with: self.meals[indexPath.row]), animated: true)
         }
         action.backgroundColor = UIColor.systemGreen

@@ -13,6 +13,7 @@ class MealCreatorVC: UIViewController {
     let titleLabel              = MPTitleLabel()
     let titleTextField          = MPTextField()
     
+
 //    let descriptionLabel        = MPTitleLabel()
 //    let descriptionTextField    = MPTextField()
 //
@@ -24,6 +25,7 @@ class MealCreatorVC: UIViewController {
 //
 //    let hstackview1             = UIStackView()
 //    let hstackview2             = UIStackView()
+
     
     let submitButton            = MPButton(backgroundColor: .systemGreen, title: "Submit")
     
@@ -41,22 +43,27 @@ class MealCreatorVC: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
 //        setUpHStacks()
+
         layoutViews()
         configureSubmitButton()
         createDismissKeyboardTapGesture()
         
         titleLabel.text         = "Title"
+
 //        descriptionLabel.text   = "Description"
 //        vegetarianLabel.text    = "Vegetarian?"
 //        glutenLabel.text        = "Gluten Free?"
+
     }
     
     init(with importedMeal: Meal?) {
         super.init(nibName: nil, bundle: nil)
         titleTextField.text         = importedMeal?.title ?? ""
 //        descriptionTextField.text   = importedMeal?.shortDescription ?? ""
+
 //        glutenToggle.isOn           = importedMeal?.glutenFree ?? false
 //        vegetarianToggle.isOn       = importedMeal?.vegetarian ?? false
+
         mealToSubmit                = importedMeal
     }
     
@@ -80,10 +87,9 @@ class MealCreatorVC: UIViewController {
         if mealToSubmit != nil {
             mealToSubmit?.title             = titleTextField.text!
 //            mealToSubmit?.shortDescription  = descriptionTextField.text
-//            mealToSubmit?.vegetarian        = vegetarianToggle.isOn
-//            mealToSubmit?.glutenFree        = glutenToggle.isOn
+
         } else { /// otherwise, create a new meal with stuff from the view.
-            mealToSubmit = Meal(withTitle: titleTextField.text!/*, shortDescription: descriptionTextField.text , isVegetarian: vegetarianToggle.isOn, isGlutenFree: glutenToggle.isOn*/)
+            mealToSubmit = Meal(withTitle: titleTextField.text!/*, shortDescription: descriptionTextField.text*/)
         }
         
         /// save the meal to userdefaults
@@ -119,7 +125,7 @@ class MealCreatorVC: UIViewController {
 //        hstackview2.distribution = .equalCentering
 //        hstackview2.translatesAutoresizingMaskIntoConstraints = false
 //    }
-    
+
     func layoutViews() {
         
         view.addSubviews(titleLabel,
@@ -128,6 +134,7 @@ class MealCreatorVC: UIViewController {
 //                         descriptionTextField,
 //                         hstackview1,
 //                         hstackview2,
+
                          submitButton)
         
         /// could maybe look at tinyconstraints but meh i think i'd rather make this page with swiftUI instead
@@ -141,8 +148,7 @@ class MealCreatorVC: UIViewController {
             titleTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: sidePadding),
             titleTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -sidePadding),
             titleTextField.heightAnchor.constraint(equalToConstant: bodyLabelHeight),
-            
-//
+
 //            descriptionLabel.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: elementPadding),
 //            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: sidePadding),
 //            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -sidePadding),
@@ -162,6 +168,7 @@ class MealCreatorVC: UIViewController {
 //            hstackview2.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: sidePadding),
 //            hstackview2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -sidePadding),
 //            hstackview2.heightAnchor.constraint(equalToConstant: bodyLabelHeight),
+
             
             submitButton.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 50),
             submitButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),

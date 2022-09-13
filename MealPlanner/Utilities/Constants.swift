@@ -15,6 +15,11 @@ enum GeneralConstants {
     static let useMealsList     = "Add one in the meals list"
 }
 
+struct Images {
+    static let cellDefaultBackgroundImage   = UIImage(named: "MP-Food_placeholder_3")!
+    static let friedRice                    = UIImage(named: "fried-rice")!
+}
+
 enum SFSymbols {
     static let calendar         = UIImage(systemName: "calendar")
     static let list             = UIImage(systemName: "text.badge.plus")
@@ -39,7 +44,7 @@ enum DeviceTypes {
     static let isiPhone8PlusZoomed      = idiom == .phone && ScreenSize.maxLength == 736.0 && nativeScale < scale
     static let isiPhoneX                = idiom == .phone && ScreenSize.maxLength == 812.0
     static let isiPhoneXsMaxAndXr       = idiom == .phone && ScreenSize.maxLength == 896.0
-    static let isiPad                   = idiom == .pad && ScreenSize.maxLength >= 1024.0
+    static let isiPad                   = idiom == .pad   && ScreenSize.maxLength >= 1024.0
     
     static func isiPhoneXAspectRatio() -> Bool {
         return isiPhoneX || isiPhoneXsMaxAndXr
