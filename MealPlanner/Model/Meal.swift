@@ -13,7 +13,7 @@ struct Meal: Codable, Hashable {
     
     var title: String           // title of the meal
 
-    //var subTitle: String?       // other bits of the recpie ie pumpkin soup with croutons
+    //var subTitle: String?       // other bits of the recpie eg pumpkin soup with croutons
     //var avatar: UIImage?        // picture of the meal
     //let sourceURL: String?      // URL where recipe/meal was found
     //var shortDescription: String?   // quick description of the meal
