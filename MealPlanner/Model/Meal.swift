@@ -8,10 +8,12 @@
 
 import UIKit
 
-struct Meal: Codable, Hashable {
+class Meal: Codable {
     let identifier: UUID
     
     var title: String           // title of the meal
+    var isInCurrentWeek: Bool
+    var cookedCounter: Int
 
     //var subTitle: String?       // other bits of the recpie eg pumpkin soup with croutons
     //var avatar: UIImage?        // picture of the meal
@@ -29,6 +31,8 @@ struct Meal: Codable, Hashable {
     init(withTitle title: String/*, shortDescription: String?*/) {
         identifier = UUID()
         self.title = title
+        self.isInCurrentWeek = false
+        self.cookedCounter = 0
         //self.shortDescription = shortDescription
     }
 }

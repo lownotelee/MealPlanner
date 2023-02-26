@@ -46,7 +46,7 @@ class MealsListVC: MPDataLoadingVC, AddButtonTappedDelegate {
     }
     
     func getMeals() {
-        PersistenceManager.retrieveMealsList(fromList: .allMeals, completed: { [weak self] result in
+        MealListPersistenceManager.retrieveMealsList(fromList: .allMeals, completed: { [weak self] result in
             guard let self = self else {return}
             switch result {
             case .success(let mealsList):
@@ -109,7 +109,7 @@ extension MealsListVC: UITableViewDataSource, UITableViewDelegate {
     
     func deleteAction(at indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .destructive, title: "Delete") { (action, view, nil) in
-            PersistenceManager.updateWith(meal: self.meals[indexPath.row], actionType: .remove, toList: .allMeals) { [weak self] error in
+            MealListPersistenceManager.updateWith(meal: self.meals[indexPath.row], actionType: .remove, toList: .allMeals) { [weak self] error in
                 guard let self  = self else {return}
                 guard let error = error else {
 

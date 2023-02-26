@@ -11,7 +11,6 @@
 /// But now the list changes whenever the view appears again
 /// It looks like I'm not actually saving the list anywhere, so I need to use the persistenceManager
 /// stuff from MealCreatorVC to save it to userdefaults and then grab it again when the view appears
-/// I should probably break out the randomise function to another function as well
 ///
 
 
@@ -22,7 +21,8 @@ class WeekVC: MPDataLoadingVC {
     let buttonViewArea = UIView()
     let randomiseButton = MPButton(backgroundColor: .systemBlue, title: "Feed me")
     
-    var weekOfMeals: [Meal] = []
+    var weekOfMealIDs: [UUID] = []      /// list of UUIDs of meals for the week. This is the one that's stored
+    var weekOfMealObjects: [Meal] = []  /// list of meals built by associating meals from the list of UUIDs
     
     let tableView = UITableView()
     
@@ -40,8 +40,9 @@ class WeekVC: MPDataLoadingVC {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        getWeekMeals()
-        updateUI(with: weekOfMeals)
+        getWeekMealIDsFromUserDefaults()
+        weekOfMealObjects = associateMealObjectsList()
+        updateUI(with: weekOfMealObjects)
     }
     
     private func configureViewController() {
@@ -68,12 +69,12 @@ class WeekVC: MPDataLoadingVC {
         ])
     }
     
-    func getWeekMeals() {
-        PersistenceManager.retrieveMealsList(fromList: .weekMeals, completed: { [weak self] result in
+    func getWeekMealIDsFromUserDefaults() {
+        WeekListPersistenceManager.retrieveIDList(fromList: .weekMeals, completed: { [weak self] result in
             guard let self = self else {return}
             switch result {
             case .success(let weekMealsList):
-                self.weekOfMeals = weekMealsList
+                self.weekOfMealIDs = weekMealsList
                 
             case .failure(let error):
                 self.presentMPAlertOnMainThread(title: "Something went wrong", message: error.rawValue, buttonTitle: "Ok")
@@ -81,9 +82,9 @@ class WeekVC: MPDataLoadingVC {
         })
     }
     
-    private func saveWeekMealsToUserDefaults(arrayOfMeals: [Meal]) {
-        for meal in arrayOfMeals {
-            PersistenceManager.updateWith(meal: meal, actionType: .add, toList: .weekMeals) { [weak self] error in
+    private func saveWeekMealsToUserDefaults(arrayOfIDs: [UUID]) {
+        for id in arrayOfIDs {
+            WeekListPersistenceManager.updateWith(id: id, actionType: .add, toList: .weekMeals) { [weak self] error in
                 guard let self = self else {return}
                 guard let error = error else {
                     return
@@ -94,27 +95,26 @@ class WeekVC: MPDataLoadingVC {
     }
     
     /// created this function because it'll be useful in swipe to delete actions
-    private func removeMealFromWeekList(mealToRemove: Meal) {
-        PersistenceManager.updateWith(meal: mealToRemove, actionType: .remove, toList: .weekMeals) { [weak self] error in
+    private func removeIDFromWeekList(idToRemove: UUID) {
+        WeekListPersistenceManager.updateWith(id: idToRemove, actionType: .remove, toList: .weekMeals) { [weak self] error in
             guard let self = self else {return}
-            guard let error = error else {
-                return
-            }
+            guard let error = error else {return}
             self.presentMPAlertOnMainThread(title: "Something went wrong", message: error.rawValue, buttonTitle: "Ok")
         }
     }
     
-    private func removeWeekMealsFromUserDefaults(arrayOfMeals: [Meal]) {
-        for meal in arrayOfMeals {
-            removeMealFromWeekList(mealToRemove: meal)
+    private func removeWeekMealsFromUserDefaults(arrayOfIDs: [UUID]) {
+        for id in arrayOfIDs {
+            removeIDFromWeekList(idToRemove: id)
         }
     }
     
     func updateUI(with meals: [Meal]) {
         if meals.isEmpty {
+            print("meal list is empty")
             //self.showEmptyStateView(with: noMealsWarning, in: self.view)
         } else {
-            self.weekOfMeals = meals
+            self.weekOfMealObjects = meals
             DispatchQueue.main.async {
                 self.tableView.reloadData()
                 /// bring table view to front in case the empty state view was there before
@@ -149,7 +149,7 @@ class WeekVC: MPDataLoadingVC {
     private func getAllMeals() -> [Meal] {
         var weekMealList: [Meal] = []
         
-        PersistenceManager.retrieveMealsList(fromList: .allMeals, completed: { [weak self] result in
+        MealListPersistenceManager.retrieveMealsList(fromList: .allMeals, completed: { [weak self] result in
             guard let self = self else {return}
             switch result {
             case .success(let allMealsList):
@@ -164,30 +164,40 @@ class WeekVC: MPDataLoadingVC {
     
     @objc private func buttonAction() {
         print("button hit")
-        if !weekOfMeals.isEmpty {
-            removeWeekMealsFromUserDefaults(arrayOfMeals: weekOfMeals)
+        if !weekOfMealIDs.isEmpty {
+            removeWeekMealsFromUserDefaults(arrayOfIDs: weekOfMealIDs)
         }
-        weekOfMeals = createWeekMealsList()
-        saveWeekMealsToUserDefaults(arrayOfMeals: weekOfMeals)
-        updateUI(with: weekOfMeals)
+        weekOfMealIDs = createWeekMealsList()
+        saveWeekMealsToUserDefaults(arrayOfIDs: weekOfMealIDs)
+        weekOfMealObjects = associateMealObjectsList()
+        updateUI(with: weekOfMealObjects)
+    }
+    
+    func associateMealObjectsList() -> [Meal] {
+        
+        var newList: [Meal] = []
+        let allMeals = getAllMeals()
+        
+        for i in 0..<weekOfMealIDs.count {
+            if let newMeal = allMeals.first(where: {$0.identifier == weekOfMealIDs[i]}) {
+                newList.append(newMeal)
+            } else {
+                // TODO: Create a default meal
+            }
+        }
+        
+        return newList
     }
     
     // TODO: Figure out how to pad out the list if it's less than 7 meals, and fill them with placeholder/takeaway meals
-    // TODO: There's a pretty big issue with this in that it just creates a copy of the meals in the list.
-    // If a meal is deleted, it's not deleted here as well.
-    // Do I need to have an external meal list model/controller?
-    // I think I should have an array of meal IDs, and use that to find the meal in the list
-    // Probably means I need to make the meal list a set
-    func createWeekMealsList() -> [Meal] {
-        var weekList: [Meal] = []
-        let allMeals = getAllMeals()
-        var listOfSevenRandomNumbers = Array(0..<allMeals.count)
+    func createWeekMealsList() -> [UUID] {
+        var weekList: [UUID] = []
+        let allMeals = getAllMeals().shuffled()
         
-        listOfSevenRandomNumbers.shuffle()
-        listOfSevenRandomNumbers.removeSubrange(7...)
+        let numberOfMeals = (allMeals.count >= 7) ? 7 : allMeals.count
         
-        for element in listOfSevenRandomNumbers {
-            weekList.append(allMeals[element])
+        for i in 0..<numberOfMeals {
+            weekList.append(allMeals[i].identifier)
         }
         
         return weekList
@@ -196,12 +206,13 @@ class WeekVC: MPDataLoadingVC {
 
 extension WeekVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return weekOfMeals.count
+        return weekOfMealIDs.count
     }
     
+    ///
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: MealsCell.reuseID) as! MealsCell
-        cell.set(meal: weekOfMeals[indexPath.row])
+        cell.set(meal: weekOfMealObjects[indexPath.row])
         return cell
     }
     
@@ -225,15 +236,17 @@ extension WeekVC: UITableViewDataSource, UITableViewDelegate {
         return action
     }
     
+    /// Remove meal from list
+    /// Replace with default meal
     func deleteAction(at indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .destructive, title: "Delete") { (action, view, nil) in
-            PersistenceManager.updateWith(meal: self.weekOfMeals[indexPath.row], actionType: .remove, toList: .weekMeals) { [weak self] error in
+            WeekListPersistenceManager.updateWith(id: self.weekOfMealIDs[indexPath.row], actionType: .remove, toList: .weekMeals) { [weak self] error in
                 guard let self  = self else {return}
                 guard let error = error else {
                     
-                    self.weekOfMeals.remove(at: indexPath.row)
+                    self.weekOfMealIDs.remove(at: indexPath.row)
                     self.tableView.deleteRows(at: [indexPath], with: .automatic)
-                    if self.weekOfMeals.isEmpty {
+                    if self.weekOfMealIDs.isEmpty {
                         self.showEmptyStateView(with: self.noMealsWarning, in: self.view)
                     }
                     return
@@ -245,8 +258,9 @@ extension WeekVC: UITableViewDataSource, UITableViewDelegate {
         return action
     }
     
+    /// Look up meal with corresponding UUID and use that to load up the meal detail VC
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedMeal = weekOfMeals[indexPath.row]
+        let selectedMeal = weekOfMealObjects[indexPath.row]
         let destVC = MealDetailVC(meal: selectedMeal)
         show(destVC, sender: self)
         
