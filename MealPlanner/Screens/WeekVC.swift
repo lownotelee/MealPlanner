@@ -6,11 +6,7 @@
 //  Copyright © 2020 radev. All rights reserved.
 //
 
-/// NOTES
-/// So I fixed the inital bug that the list wasnt appearing when the view was loaded
-/// But now the list changes whenever the view appears again
-/// It looks like I'm not actually saving the list anywhere, so I need to use the persistenceManager
-/// stuff from MealCreatorVC to save it to userdefaults and then grab it again when the view appears
+
 ///
 
 
@@ -173,6 +169,7 @@ class WeekVC: MPDataLoadingVC {
         updateUI(with: weekOfMealObjects)
     }
     
+    ///
     func associateMealObjectsList() -> [Meal] {
         
         var newList: [Meal] = []
@@ -182,7 +179,7 @@ class WeekVC: MPDataLoadingVC {
             if let newMeal = allMeals.first(where: {$0.identifier == weekOfMealIDs[i]}) {
                 newList.append(newMeal)
             } else {
-                // TODO: Create a default meal
+                newList.append(Meal(withTitle: "Takeaway"))
             }
         }
         
@@ -192,8 +189,14 @@ class WeekVC: MPDataLoadingVC {
     // TODO: Figure out how to pad out the list if it's less than 7 meals, and fill them with placeholder/takeaway meals
     func createWeekMealsList() -> [UUID] {
         var weekList: [UUID] = []
-        let allMeals = getAllMeals().shuffled()
+        var allMeals = getAllMeals().shuffled()
         
+        while allMeals.count < 7 {
+            allMeals.append(Meal(withTitle: "Takeaway"))
+            allMeals.shuffle()
+        }
+        
+        // number of meals is 7 if there are 7 or more meals, otherwise it's just the number of meals.
         let numberOfMeals = (allMeals.count >= 7) ? 7 : allMeals.count
         
         for i in 0..<numberOfMeals {
