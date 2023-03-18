@@ -169,7 +169,12 @@ class WeekVC: MPDataLoadingVC {
         updateUI(with: weekOfMealObjects)
     }
     
+    /// Compares the list of UUIDs for the Week Meal list to the main meal list.
     ///
+    /// - returns: an array of meals
+    ///
+    /// # Notes: #
+    /// If no meal can be matched (ie the meal has been removed from the main list), that slot is replaced with a takeaway meal
     func associateMealObjectsList() -> [Meal] {
         
         var newList: [Meal] = []
